@@ -1,0 +1,21 @@
+<android.support.v7.widget.Toolbar
+    android:background="?attr/colorPrimary"
+    android:elevation="4dp"
+    android:id="@+id/mToolbar"
+    android:layout_height="?attr/actionBarSize"
+    android:layout_width="match_parent"
+    app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+        android:id="@+id/toolbar_title"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Music"
+        android:textSize="21sp" />
+
+
+</android.support.v7.widget.Toolbar>
