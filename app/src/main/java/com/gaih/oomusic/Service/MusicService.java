@@ -166,20 +166,9 @@ public class MusicService extends Service {
 
     public void playMusic(int position, final ArrayList<Music> newList) {
         final int finalPosition = position;
-        if (player == null)
-        {
-            player = new MediaPlayer();
-        }
-        if (player.isPlaying())
-        {
-            player.stop();
-            player.release();
-            player = null;
-            player = new MediaPlayer();
-
-        }
         this.newList = newList;
         try {
+            player = new MediaPlayer();
             player.reset();
             player.setDataSource(newList.get(position).getUri());
             player.prepare();
