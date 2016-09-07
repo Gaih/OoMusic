@@ -98,6 +98,9 @@ public class MusicService extends Service {
                         }
                         duration = player.getDuration();
                         currentPosition = player.getCurrentPosition();
+//                        Intent intent = new Intent("gaiii");
+//                        intent.putExtra("gai","位置"+currentPosition);
+//                        sendBroadcast(intent);
                         Message msg = Message.obtain();
                         Message msg2 = Message.obtain();
                         Bundle bundle = new Bundle();
@@ -117,12 +120,10 @@ public class MusicService extends Service {
 
                 }
             };
-            timer.schedule(task, 300, 100);
+            timer.schedule(task, 1000, 300);
         }
 
     }
-
-
     private void notification(String name, String singer, Bitmap bitmap) {
         mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -167,17 +168,28 @@ public class MusicService extends Service {
     public void playMusic(int position, final ArrayList<Music> newList) {
         final int finalPosition = position;
         this.newList = newList;
+//        Intent intent = new Intent("gaiii");
+//        intent.putParcelableArrayListExtra("gai", newList);
+//        sendBroadcast(intent);
         try {
+            if (player!=null){
+                player.release();
+            }
             player = new MediaPlayer();
             player.reset();
             player.setDataSource(newList.get(position).getUri());
-            player.prepare();
-            player.start();
+            player.prepareAsync();
 
             mPosition = position;
+            player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    player.start();
+                    updateSeekBar();
+                    notification(newList.get(finalPosition).getName(), newList.get(finalPosition).getSinger(), newList.get(finalPosition).getBitmap());
+                }
+            });
 
-            updateSeekBar();
-            notification(newList.get(position).getName(), newList.get(position).getSinger(), newList.get(position).getBitmap());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -206,6 +218,7 @@ public class MusicService extends Service {
         public void callPlayMusic(final int position, ArrayList<Music> musicList) {
 
             playMusic(position, musicList);
+
         }
 
         @Override

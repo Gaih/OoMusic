@@ -1,39 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/playing"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:background="@color/deepGray"
+    android:layout_height="match_parent"
     android:orientation="vertical">
     <LinearLayout
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="100dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center">
         <TextView
+            android:textColor="@color/gray"
             android:text="歌曲名"
             android:textSize="48sp"
-            android:id="@+id/fg2_name"
+            android:id="@+id/name2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
+            android:textColor="@color/gray"
             android:layout_marginTop="10dp"
             android:text="歌手名"
             android:textSize="28sp"
-            android:id="@+id/fg2_singer"
+            android:id="@+id/singer2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <ImageView
             android:layout_marginTop="10dp"
             android:layout_marginBottom="30dp"
             android:src="@drawable/default_cover"
-            android:id="@+id/fg2_album"
+            android:id="@+id/album2"
             android:layout_width="100dp"
             android:layout_height="100dp" />
 
     </LinearLayout>
 
     <SeekBar
-        android:id="@+id/seekBar1"
+        android:id="@+id/seekBar2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -44,7 +48,9 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/before"
+            android:textColor="@color/gray"
+            android:background="@color/deepGray"
+            android:id="@+id/before2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -52,7 +58,9 @@
             android:text="上一首" />
 
         <Button
-            android:id="@+id/palying"
+            android:textColor="@color/gray"
+            android:background="@color/deepGray"
+            android:id="@+id/palying2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -60,7 +68,9 @@
             android:text="暂停" />
 
         <Button
-            android:id="@+id/after"
+            android:textColor="@color/gray"
+            android:background="@color/deepGray"
+            android:id="@+id/after2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

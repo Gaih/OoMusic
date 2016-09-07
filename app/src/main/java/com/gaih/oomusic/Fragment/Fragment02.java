@@ -1,5 +1,6 @@
 package com.gaih.oomusic.Fragment;
 
+import android.app.Fragment;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -8,7 +9,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,7 +50,7 @@ public class Fragment02 extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view;
-        view = inflater.inflate(R.layout.title, container, false);
+        view = inflater.inflate(R.layout.tab02, container, false);
         Intent intent = new Intent(this.getContext(), MusicService.class);
         getActivity().startService(intent);
         myconn = new Fragment02.Myconn();

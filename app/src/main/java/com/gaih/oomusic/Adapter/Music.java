@@ -77,6 +77,8 @@ public class Music implements Parcelable {
         dest.writeString(singer);
         dest.writeString(uri);
         dest.writeLong(album);
+        bitmap.writeToParcel(dest, 0);
+
 
     }
 
@@ -90,6 +92,8 @@ public class Music implements Parcelable {
             p.setName(source.readString());
             p.setSinger(source.readString());
             p.setUri(source.readString());
+            p.setAlbum(source.readLong());
+            p.bitmap = Bitmap.CREATOR.createFromParcel(source);
 
             return p;
         }

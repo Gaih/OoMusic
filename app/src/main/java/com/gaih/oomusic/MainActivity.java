@@ -2,7 +2,13 @@ package com.gaih.oomusic;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Application;
+
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -20,11 +26,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -38,6 +46,8 @@ import com.gaih.oomusic.Fragment.Fragment02;
 import com.gaih.oomusic.Fragment.Fragment03;
 import com.gaih.oomusic.Service.Iservice;
 import com.gaih.oomusic.Service.MusicService;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
 import java.util.ArrayList;
 
@@ -48,48 +58,8 @@ import permissions.dispatcher.OnShowRationale;
 import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
-@RuntimePermissions
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
-
-
-    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    void showCamera() {
-    }
-
-    @OnShowRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    void showRationaleForCamera(final PermissionRequest request) {
-        new AlertDialog.Builder(this)
-                .setMessage("文件权限")
-                .setPositiveButton("知道了", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        request.proceed();//再次执行请求
-                    }
-                })
-                .setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                })
-                .show();
-    }
-
-    @OnPermissionDenied(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    void showDeniedForCamera() {
-        Toast.makeText(this, "拒绝", Toast.LENGTH_SHORT).show();
-    }
-
-    @OnNeverAskAgain(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    void showNeverAskForCamera() {
-        Toast.makeText(this, "彻底拒绝", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
-    }
 
 
     private static TextView tSong;
@@ -107,25 +77,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TabLayout tabLayout;
     private Toolbar toolBar;
     private static ArrayList<Music> musicList = new ArrayList<>();
+    private FrameLayout frameLayout;
+    private static ImageView sideImg;
+    private static TextView side_name;
+    private static TextView side_singer;
+    private MusicAdapter musicAdapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        MainActivityPermissionsDispatcher.showCameraWithCheck(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         init();
 
-
-        Intent intent = new Intent(this, MusicService.class);
-        startService(intent);
-        myconn = new Myconn();
-        bindService(intent, myconn, BIND_AUTO_CREATE);
 //        Window window = this.getWindow();
-        this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-
+//        this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 //        //取消设置透明状态栏,使 ContentView 内容不再覆盖状态栏
 //        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 //        //需要设置这个 flag 才能调用 setStatusBarColor 来设置状态栏颜色
@@ -150,12 +117,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
+        sideImg = (ImageView) headerView.findViewById(R.id.side_img);
+        side_singer = (TextView) headerView.findViewById(R.id.side_singer);
+        side_name = (TextView)headerView.findViewById(R.id.side_name);
 
-        pagerAdapter = new FragmentAdapter(getSupportFragmentManager(), this);
+
+        pagerAdapter = new FragmentAdapter(getFragmentManager(), this);
+
         viewPager = (ViewPager) findViewById(R.id.mViewPager);
         tabLayout = (TabLayout) findViewById(R.id.mTabLayout);
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
+
 
 
         tSong = (TextView) findViewById(R.id.tv_song);
@@ -163,9 +137,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mAlbum = (ImageView) findViewById(R.id.iv_album);
         mPlay = (ImageView) findViewById(R.id.iv_play);
         mNext = (ImageView) findViewById(R.id.iv_next);
+        frameLayout = (FrameLayout)findViewById(R.id.mFrameLayout);
+        frameLayout.setOnClickListener(this);
         mPlay.setOnClickListener(this);
         mNext.setOnClickListener(this);
         mProgressbar = (ProgressBar) findViewById(R.id.mProgressBar);
+        Intent intent = new Intent(this, MusicService.class);
+        startService(intent);
+        myconn = new Myconn();
+        bindService(intent, myconn, BIND_AUTO_CREATE);
     }
 
     @Override
@@ -193,6 +173,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             tSinger.setText(musicList.get(mPosition).getSinger());
             tSong.setText(musicList.get(mPosition).getName());
             mAlbum.setImageBitmap(musicList.get(mPosition).getBitmap());
+
+            sideImg.setImageBitmap(musicList.get(mPosition).getBitmap());
+            side_singer.setText(musicList.get(mPosition).getSinger());
+            side_name.setText(musicList.get(mPosition).getName());
+
             if (isPlaying) {
                 mPlay.setImageResource(R.drawable.ic_play_bar_btn_pause);
             } else if (!isPlaying) {
@@ -210,6 +195,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.iv_next:
                 iservice.callPlayMusic(mPosition + 1, musicList);
                 break;
+            case R.id.mFrameLayout:
+//                Fragment02 fragment02 = new Fragment02();
+//                FragmentManager fm = getFragmentManager();
+//                FragmentTransaction tx = fm.beginTransaction();
+//                tx.add(R.id.activity_main,fragment02,"ONE");
+//                tx.addToBackStack(null);
+//                tx.commit();
+                Intent intent=new Intent(MainActivity.this,Playing.class);
+                intent.putExtra("name", musicList.get(mPosition).getName());
+                intent.putExtra("singer", musicList.get(mPosition).getSinger());
+//                intent.putExtra("bitmap", musicList.get(mPosition).getBitmap());
+//                intent.putExtra("music", );
+//                intent.putExtra("music", musicList.get(mPosition).getName());
+
+                startActivity(intent);
+
+
+                Toast.makeText(MainActivity.this,"aaaaaa",Toast.LENGTH_SHORT).show();
             default:
                 break;
 
@@ -219,9 +222,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            moveTaskToBack(false);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -233,6 +241,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_search:
+//                ScanMusic scanMusic = new ScanMusic();
+//                scanMusic.scanMusic(MainActivity.this, musicList);
+//
+//
+//                Fragment01 fragment01 = new Fragment01();
+//                MusicAdapter musicAdapter = new MusicAdapter(musicList);
+//                getFragmentManager().findFragmentByTag().getView().findViewById(R.id.recyclerView);
                 Toast.makeText(getApplicationContext(), "扫描完成", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.action_exit:
