@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+        <style name="Theme.AppCompat.Light.NoActionBar">
+                <item name="windowActionBar">false</item>
+                <item name="windowNoTitle">true</item>
+
+                <item name="android:windowTranslucentStatus">true</item>
+                <item name="android:windowTranslucentNavigation">false</item>
+                <item name="android:statusBarColor">@color/gray</item>
+
+                <!--<item name="android:colorPrimary">@color/deepGray</item>-->
+                <item name="android:colorPrimaryDark">@color/deepGray</item>
+                <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+                <!--<item name="android:statusBarColor">@android:color/transparent</item>-->
+        </style>
+</resources>
