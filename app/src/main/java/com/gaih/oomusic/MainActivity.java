@@ -272,7 +272,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (id == R.id.nav_setting) {
 
         } else if (id == R.id.nav_exit) {
-
+            Intent intent = new Intent(this, MusicService.class);
+            stopService(intent);
+            System.exit(0);
+            return true;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
