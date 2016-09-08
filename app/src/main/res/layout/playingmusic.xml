@@ -4,9 +4,11 @@
     android:layout_width="match_parent"
     android:background="@color/deepGray"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
+    <include layout="@layout/toolbar"/>
     <LinearLayout
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="50dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -14,9 +16,10 @@
         <TextView
             android:textColor="@color/gray"
             android:text="歌曲名"
-            android:textSize="48sp"
+            android:textSize="38sp"
             android:id="@+id/name2"
-            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <TextView
             android:textColor="@color/gray"

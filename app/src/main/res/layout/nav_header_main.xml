@@ -16,7 +16,7 @@
         android:layout_height="130dp"
         android:paddingTop="16dp"
         android:paddingLeft="20dp"
-        app:srcCompat="@android:drawable/sym_def_app_icon" />
+        app:srcCompat="@drawable/default_cover" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
-            android:text="Android Studio"
+            android:text="歌曲"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
         <TextView
@@ -37,7 +37,7 @@
             android:id="@+id/side_singer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="android.studio@android.com" />
+            android:text="歌手" />
     </LinearLayout>
 
 

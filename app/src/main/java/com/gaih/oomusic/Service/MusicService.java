@@ -11,6 +11,7 @@ import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
@@ -19,6 +20,7 @@ import android.util.Log;
 import com.gaih.oomusic.Fragment.Fragment02;
 import com.gaih.oomusic.MainActivity;
 import com.gaih.oomusic.Adapter.Music;
+import com.gaih.oomusic.Playing;
 import com.gaih.oomusic.R;
 import com.gaih.oomusic.ScanMusic;
 
@@ -98,11 +100,8 @@ public class MusicService extends Service {
                         }
                         duration = player.getDuration();
                         currentPosition = player.getCurrentPosition();
-//                        Intent intent = new Intent("gaiii");
-//                        intent.putExtra("gai","位置"+currentPosition);
-//                        sendBroadcast(intent);
                         Message msg = Message.obtain();
-                        Message msg2 = Message.obtain();
+//                        Message msg2 = Message.obtain();
                         Bundle bundle = new Bundle();
                         bundle.putInt("duration", duration);
                         bundle.putBoolean("isPlaying", isPlaying);
@@ -111,9 +110,9 @@ public class MusicService extends Service {
                         bundle.putInt("mPosition", mPosition);
 
                         msg.setData(bundle);
-                        msg2.setData(bundle);
+//                        msg2.setData(bundle);
                         MainActivity.handler.sendMessage(msg);
-                        Fragment02.handler.sendMessage(msg2);
+//                        Playing.handler.sendMessage(msg2);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

@@ -75,7 +75,6 @@ public class WelcomeActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcom_main);
         WelcomeActivityPermissionsDispatcher.showCameraWithCheck(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int i = ActivityCompat.checkSelfPermission(this,"android.permission.WRITE_EXTERNAL_STORAGE");
             Log.d("ssss",""+i);
             if (i>=0){
@@ -92,20 +91,6 @@ public class WelcomeActivity extends AppCompatActivity{
             }else {
                 finish();
             }
-
-        }else {
-            final Intent it = new Intent(this, MainActivity.class); //你要转向的Activity
-            Timer timer = new Timer();
-            TimerTask task = new TimerTask() {
-                @Override
-                public void run() {
-                    startActivity(it); //执行
-                    finish();
-                }
-            };
-            timer.schedule(task, 1000 * 3); //10秒后
-        }
-
     }
 
 }

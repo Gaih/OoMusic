@@ -65,10 +65,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static TextView tSong;
     private static TextView tSinger;
     private static ImageView mPlay;
+    public static int duration;
+    public static int currentPosition;
+
     private ImageView mNext;
     private static ImageView mAlbum;
     private static ProgressBar mProgressbar;
-    private static int mPosition;
+    public static int mPosition;
     private static boolean isPlaying;
     private Myconn myconn;
     private Iservice iservice;
@@ -76,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private Toolbar toolBar;
-    private static ArrayList<Music> musicList = new ArrayList<>();
+    public static ArrayList<Music> musicList = new ArrayList<>();
     private FrameLayout frameLayout;
     private static ImageView sideImg;
     private static TextView side_name;
@@ -163,8 +166,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void handleMessage(Message msg) {
             Bundle bundle = msg.getData();
             mPosition = bundle.getInt("mPosition");
-            int duration = bundle.getInt("duration");
-            int currentPosition = bundle.getInt("currentPosition");
+            duration = bundle.getInt("duration");
+            currentPosition = bundle.getInt("currentPosition");
             musicList = bundle.getParcelableArrayList("newList");
             isPlaying = bundle.getBoolean("isPlaying");
 
@@ -203,12 +206,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                tx.addToBackStack(null);
 //                tx.commit();
                 Intent intent=new Intent(MainActivity.this,Playing.class);
-                intent.putExtra("name", musicList.get(mPosition).getName());
-                intent.putExtra("singer", musicList.get(mPosition).getSinger());
-//                intent.putExtra("bitmap", musicList.get(mPosition).getBitmap());
-//                intent.putExtra("music", );
-//                intent.putExtra("music", musicList.get(mPosition).getName());
-
                 startActivity(intent);
 
 
@@ -266,17 +263,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_singer) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_album) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_song) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_setting) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_exit) {
 
         }
 

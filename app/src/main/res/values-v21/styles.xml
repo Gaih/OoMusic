@@ -8,6 +8,7 @@
                 <item name="android:windowTranslucentStatus">true</item>
                 <item name="android:windowTranslucentNavigation">false</item>
                 <item name="android:statusBarColor">@color/gray</item>
+                <item name="android:navigationBarColor">@color/deepGray</item>
 
                 <!--<item name="android:colorPrimary">@color/deepGray</item>-->
                 <item name="android:colorPrimaryDark">@color/deepGray</item>

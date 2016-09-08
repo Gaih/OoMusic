@@ -1,52 +1,49 @@
 package com.gaih.oomusic;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
+
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.os.StrictMode;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.gaih.oomusic.Adapter.Music;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import java.util.ArrayList;
+import static com.gaih.oomusic.MainActivity.currentPosition;
+import static com.gaih.oomusic.MainActivity.duration;
+import static com.gaih.oomusic.MainActivity.mPosition;
+import static com.gaih.oomusic.MainActivity.musicList;
 
 /**
  * Created by Administrator on 2016/9/7.
  */
 
 public class Playing extends AppCompatActivity {
-    private ArrayList<Music> musicList;
+//    private static ArrayList<Music> musicList = new ArrayList<>();
     private ImageView mImageView;
     private TextView mSinger;
     private TextView mName;
     private Button mUp;
     private Button mNext;
     private Button mPause;
-    private SeekBar mSeekBar;
-    private int position;
+    private static SeekBar mSeekBar;
+
+
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.playingmusic);
 
-        Intent intent = getIntent();
-
-        musicList = new ArrayList<>();
-        String name = intent.getStringExtra("name");
-        String singer = intent.getStringExtra("singer");
-//        Bitmap bitmap = intent.getExtras("bitmap");
 
 
         mSinger = (TextView) findViewById(R.id.singer2);
-        mSinger.setText(singer);
         mName = (TextView) findViewById(R.id.name2);
-        mName.setText(name);
         mUp = (Button) findViewById(R.id.before2);
         mPause = (Button) findViewById(R.id.palying2);
         mNext = (Button) findViewById(R.id.after2);
@@ -54,5 +51,22 @@ public class Playing extends AppCompatActivity {
         mImageView = (ImageView) findViewById(R.id.album2);
 
 
+        mName.setText(musicList.get(mPosition).getName());
+        mSinger.setText(musicList.get(mPosition).getSinger());
+        mImageView.setImageBitmap(musicList.get(mPosition).getBitmap());
+        mSeekBar.setMax(duration);
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    mSeekBar.setProgress(currentPosition);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+        timer.schedule(task, 1000, 300);
     }
 }
