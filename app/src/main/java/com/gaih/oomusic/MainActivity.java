@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static TextView side_name;
     private static TextView side_singer;
     private MusicAdapter musicAdapter;
+    public static Context mContext;
 
 
     @Override
@@ -92,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mContext = MainActivity.this;
         init();
 
 //        Window window = this.getWindow();
@@ -203,13 +205,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                FragmentManager fm = getFragmentManager();
 //                FragmentTransaction tx = fm.beginTransaction();
 //                tx.add(R.id.activity_main,fragment02,"ONE");
-//                tx.addToBackStack(null);
+//                tx.addToBackSta·ck(null);
 //                tx.commit();
                 Intent intent=new Intent(MainActivity.this,Playing.class);
                 startActivity(intent);
-
-
-                Toast.makeText(MainActivity.this,"aaaaaa",Toast.LENGTH_SHORT).show();
             default:
                 break;
 
@@ -245,10 +244,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                Fragment01 fragment01 = new Fragment01();
 //                MusicAdapter musicAdapter = new MusicAdapter(musicList);
 //                getFragmentManager().findFragmentByTag().getView().findViewById(R.id.recyclerView);
-                Toast.makeText(getApplicationContext(), "扫描完成", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "扫描完成", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.action_exit:
-                //unbindService(myconn);
+                unbindService(myconn);
                 Intent intent = new Intent(this, MusicService.class);
                 stopService(intent);
                 System.exit(0);

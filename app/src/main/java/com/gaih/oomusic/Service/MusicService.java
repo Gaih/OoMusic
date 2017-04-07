@@ -6,6 +6,7 @@ import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.os.Binder;
@@ -14,6 +15,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
@@ -100,8 +102,21 @@ public class MusicService extends Service {
                         }
                         duration = player.getDuration();
                         currentPosition = player.getCurrentPosition();
+
+                        LocalBroadcastManager localBroadcastManager = null;
+                        IntentFilter intentFilter;
+                        localBroadcastManager = localBroadcastManager.getInstance(getApplicationContext());//获取实例
+                        intentFilter = new IntentFilter();
+                        intentFilter.addAction("com");
+//                        OnReceiver OnReceiver = new OnReceiver();
+//                        localBroadcastManager.registerReceiver(OnReceiver, intentFilter);//注册本地广播监听器
+
+                        Intent intent = new Intent("com");
+                        intent.putExtra("duration",duration+"");
+                        intent.putExtra("current",currentPosition+"");
+                        localBroadcastManager.sendBroadcast(intent);//发送本地广播
+
                         Message msg = Message.obtain();
-//                        Message msg2 = Message.obtain();
                         Bundle bundle = new Bundle();
                         bundle.putInt("duration", duration);
                         bundle.putBoolean("isPlaying", isPlaying);
@@ -167,9 +182,6 @@ public class MusicService extends Service {
     public void playMusic(int position, final ArrayList<Music> newList) {
         final int finalPosition = position;
         this.newList = newList;
-//        Intent intent = new Intent("gaiii");
-//        intent.putParcelableArrayListExtra("gai", newList);
-//        sendBroadcast(intent);
         try {
             if (player!=null){
                 player.release();

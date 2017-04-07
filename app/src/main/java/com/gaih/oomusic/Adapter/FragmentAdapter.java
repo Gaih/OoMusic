@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.gaih.oomusic.Fragment.Fragment01;
 import com.gaih.oomusic.Fragment.Fragment02;
 import com.gaih.oomusic.Fragment.Fragment03;
+import com.gaih.oomusic.Fragment.FragmentFM;
 
 import java.util.ArrayList;
 
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 public class FragmentAdapter extends FragmentPagerAdapter {
 
     private Context context;
-    private static final String[] mTitles = {"本地音乐", "个人中心", "在线音乐"};
+    private static final String[] mTitles = {"豆瓣FM", "播放列表", "本地音乐"};
     private ArrayList<Fragment> datas;
 
     public FragmentAdapter(FragmentManager fm,Context context) {
@@ -29,10 +30,10 @@ public class FragmentAdapter extends FragmentPagerAdapter {
         datas = new ArrayList<>();
         Fragment01 tab01 = new Fragment01();
         Fragment02 tab02 = new Fragment02();
-        Fragment03 tab03 = new Fragment03();
-        datas.add(tab01);
-        datas.add(tab02);
+        FragmentFM tab03 = new FragmentFM();
         datas.add(tab03);
+        datas.add(tab02);
+        datas.add(tab01);
     }
 
     @Override

@@ -29,43 +29,52 @@ import permissions.dispatcher.RuntimePermissions;
  */
 @RuntimePermissions
 
-public class WelcomeActivity extends AppCompatActivity{
+public class WelcomeActivity extends AppCompatActivity {
 
-    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    void showCamera() {
+    @NeedsPermission(value = Manifest.permission.WRITE_EXTERNAL_STORAGE,maxSdkVersion = 24)
+    void showToast() {
+        final Intent it = new Intent(this, MainActivity.class); //你要转向的Activity
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                startActivity(it); //执行
+                finish();
+            }
+        };
+        timer.schedule(task, 400 * 1); //10秒后
+        Toast.makeText(this, "获取存储卡权限", Toast.LENGTH_SHORT).show();
     }
 
-    @OnShowRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    void showRationaleForCamera(final PermissionRequest request) {
+    @OnShowRationale(Manifest.permission.CALL_PHONE)
+//提示用户为什么需要此权限
+    void showWhy(final PermissionRequest request) {
         new AlertDialog.Builder(this)
-                .setMessage("文件权限")
+                .setMessage("权限测试")
                 .setPositiveButton("知道了", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         request.proceed();//再次执行请求
                     }
                 })
-                .setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                })
                 .show();
     }
 
-    @OnPermissionDenied(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    void showDeniedForCamera() {
-        Toast.makeText(this, "拒绝", Toast.LENGTH_SHORT).show();
+    @OnPermissionDenied(Manifest.permission.CALL_PHONE)
+//一旦用户拒绝了
+    void denied() {
+        Toast.makeText(this, "真的不给权限吗", Toast.LENGTH_SHORT).show();
     }
 
-    @OnNeverAskAgain(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    void showNeverAskForCamera() {
-        Toast.makeText(this, "彻底拒绝", Toast.LENGTH_SHORT).show();
+    @OnNeverAskAgain(Manifest.permission.CALL_PHONE)
+//用户选择的不再询问
+    void notAsk() {
+        Toast.makeText(this, "好的不问了", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         WelcomeActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
@@ -74,23 +83,23 @@ public class WelcomeActivity extends AppCompatActivity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcom_main);
-        WelcomeActivityPermissionsDispatcher.showCameraWithCheck(this);
-            int i = ActivityCompat.checkSelfPermission(this,"android.permission.WRITE_EXTERNAL_STORAGE");
-            Log.d("ssss",""+i);
-            if (i>=0){
-                final Intent it = new Intent(this, MainActivity.class); //你要转向的Activity
-                Timer timer = new Timer();
-                TimerTask task = new TimerTask() {
-                    @Override
-                    public void run() {
-                        startActivity(it); //执行
-                        finish();
-                    }
-                };
-                timer.schedule(task, 400 * 1); //10秒后
-            }else {
-                finish();
-            }
+        WelcomeActivityPermissionsDispatcher.showToastWithCheck(this);
+        int i = ActivityCompat.checkSelfPermission(this, "android.permission.WRITE_EXTERNAL_STORAGE");
+        Log.d("ssss", "" + i);
+//        if (i >= 0) {
+//            final Intent it = new Intent(this, MainActivity.class); //你要转向的Activity
+//            Timer timer = new Timer();
+//            TimerTask task = new TimerTask() {
+//                @Override
+//                public void run() {
+//                    startActivity(it); //执行
+//                    finish();
+//                }
+//            };
+//            timer.schedule(task, 400 * 1); //10秒后
+//        } else {
+//            Toast.makeText(WelcomeActivity.this, "权限", Toast.LENGTH_SHORT).show();
+//        }
     }
 
 }
