@@ -1,8 +1,14 @@
 package com.gaih.oomusic.Adapter;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +17,10 @@ import android.widget.TextView;
 
 import com.gaih.oomusic.R;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -20,6 +30,7 @@ import java.util.ArrayList;
 public class MainPageAdapter extends RecyclerView.Adapter<MainPageAdapter.ViewHolder> {
 
     private ArrayList<MainPager> mData;
+
     public MainPageAdapter(ArrayList<MainPager> mData){
         this.mData = mData;
     }
@@ -33,8 +44,11 @@ public class MainPageAdapter extends RecyclerView.Adapter<MainPageAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.name.setText(mData.get(position).getName());
         holder.singer.setText(mData.get(position).getIntro());
-        holder.mImageView.setImageURI(Uri.parse(mData.get(position).getCover()));
+        holder.mImageView.setImageBitmap(mData.get(position).getCover());
+
+        Log.d("1111","1111"+mData.get(position).getCover());
     }
+
 
     @Override
     public int getItemCount() {
@@ -69,4 +83,6 @@ public class MainPageAdapter extends RecyclerView.Adapter<MainPageAdapter.ViewHo
                 itemClickListener.onItemClick(v,getPosition());
             }
         }}
+
+
 }

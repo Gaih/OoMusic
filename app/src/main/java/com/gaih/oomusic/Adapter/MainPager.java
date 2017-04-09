@@ -7,19 +7,14 @@ import android.os.Parcelable;
 /**
  * Created by gaih on 2016/8/4.
  */
-public class MainPager   implements Parcelable {
+public class MainPager   implements Parcelable{
     private String name;
     private String intro;
-    private String cover;
+    private Bitmap cover;
 
 
     public MainPager(){
 
-    }
-    public MainPager(String name, String intro, String cover) {
-        this.name = name;
-        this.intro = intro;
-        this.cover = cover;
     }
 
     public String getName() {
@@ -30,12 +25,18 @@ public class MainPager   implements Parcelable {
         return intro;
     }
 
-    public String getCover() {
+    public Bitmap getCover() {
         return cover;
     }
 
-    public void setName(String name) {
+    public MainPager(String name, String intro, Bitmap cover) {
+        this.name = name;
+        this.intro = intro;
+        this.cover = cover;
 
+    }
+
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -43,7 +44,7 @@ public class MainPager   implements Parcelable {
         this.intro = intro;
     }
 
-    public void setCover(String cover) {
+    public void setCover(Bitmap cover) {
         this.cover = cover;
     }
 
@@ -56,11 +57,12 @@ public class MainPager   implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(intro);
-        dest.writeString(cover);
+        cover.writeToParcel(dest, 0);
+
 
     }
 
-    public static final Parcelable.Creator<MainPager> CREATOR = new Parcelable.Creator<MainPager>(){
+    public static final Parcelable.Creator<MainPager> CREATOR = new Creator<MainPager>(){
 
         @Override
         public MainPager createFromParcel(Parcel source) {
@@ -69,7 +71,9 @@ public class MainPager   implements Parcelable {
             MainPager p = new MainPager();
             p.setName(source.readString());
             p.setIntro(source.readString());
-            p.setCover(source.readString());
+
+            p.cover = Bitmap.CREATOR.createFromParcel(source);
+
             return p;
         }
 

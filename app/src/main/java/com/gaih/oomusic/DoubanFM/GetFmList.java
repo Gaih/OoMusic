@@ -1,4 +1,4 @@
-package com.gaih.oomusic;
+package com.gaih.oomusic.DoubanFM;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSONArray;
@@ -18,6 +19,7 @@ import com.gaih.oomusic.Adapter.Music;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -146,42 +148,66 @@ public class GetFmList {
                     String jsonStr = sb.toString();
                     //String转换成JSON
                     //Json的解析类对象
-//                    JSONObject json;
-//                    json = JSONObject.parseObject(jsonStr);
-//                    Log.d("11111", "11112" + json);
-//                    JSONArray jsonArray = JSONArray.parseArray(json.getString("groups"));
-//                    Log.d("11111", "11113" + jsonArray);
-//                    json = (JSONObject) jsonArray.get(3);
-//                    Log.d("11111", "11111" + json.get("chls"));
-//                    JSONArray array = JSONArray.parseArray(json.get("chls").toString());
-//                    for (Object singJson : array
-//                            ) {
-//                        json = JSONObject.parseObject(singJson.toString());
-//                        String name = json.getString("name");
-//                        String intro = json.getString("intro");
-//                        String cover = json.getString("cover");
-//                        Log.d("11111", "11111" + name + intro + cover);
-//
-//                        MainPager pager = new MainPager(name, intro, cover);
-//                        mainList.add(pager);
+                    Log.d("11111", "11112" + jsonStr);
 
+                    JSONObject json;
+                    json = JSONObject.parseObject(jsonStr);
+                    Log.d("11111", "11112" + json);
+                    JSONArray jsonArray = JSONArray.parseArray(json.getString("groups"));
+                    Log.d("11111", "11113" + jsonArray);
+                    json = (JSONObject) jsonArray.get(3);
+                    Log.d("11111", "11111" + json.get("chls"));
+                    JSONArray array = JSONArray.parseArray(json.get("chls").toString());
+                    ArrayList<MainPager> mainList = new ArrayList<MainPager>();
+
+                    for (Object singJson : array
+                            ) {
+                        json = JSONObject.parseObject(singJson.toString());
+                        String name = json.getString("name");
+                        String intro = json.getString("intro");
+                        String cover = json.getString("cover");
+                        Bitmap bmp = getURLimage(cover);
+                        Log.d("11111", "11111" + name + intro + bmp);
+
+                        MainPager page = new MainPager(name, intro, bmp);
+                        mainList.add(page);
+                    }
                     Message message=new Message();
                     Bundle bundle=new Bundle();
-                    bundle.putString("json", jsonStr);
+                    bundle.putParcelableArrayList("json", (ArrayList<? extends Parcelable>) mainList);
+//                    bundle.putString("intro", intro);
+//                    bundle.putParcelable("bmp", bmp);
                     message.setData(bundle);//bundle传值，耗时，效率低
                     mHandler.sendMessage(message);//发送message信息
                     message.what=0;//标志是哪个线程传数据
+
+
                     //message有四个传值方法，
                     //两个传int整型数据的方法message.arg1，message.arg2
                     //一个传对象数据的方法message.obj
                     //一个bandle传值方法
 //                    mHandler.obtainMessage(0, jsonStr).sendToTarget();//向ui线程发送SUCCESS标识和数据
-
-
-
-
                 }
             });
         }
     };
+    //根据url获取bitmap图像
+    public Bitmap getURLimage(String  cover) {
+        Bitmap bmp = null;
+        try {
+            URL myurl = new URL(cover);
+            // 获得连接
+            HttpURLConnection conn = (HttpURLConnection) myurl.openConnection();
+            conn.setConnectTimeout(6000);//设置超时
+            conn.setDoInput(true);
+            conn.setUseCaches(false);//不缓存
+            conn.connect();
+            InputStream is = conn.getInputStream();//获得图片的数据流
+            bmp = BitmapFactory.decodeStream(is);
+            is.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bmp;
+    }
 }
