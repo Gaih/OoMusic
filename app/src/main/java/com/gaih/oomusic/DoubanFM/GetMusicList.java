@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.Parcelable;
 import android.util.Log;
@@ -16,6 +17,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.StringCodec;
 import com.gaih.oomusic.Adapter.MainPager;
 import com.gaih.oomusic.Adapter.Music;
+import com.gaih.oomusic.MainActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,7 +43,7 @@ public class GetMusicList {
     private Handler mHandler;
 
 
-    public void getMainList(int channelId, Handler mHandler) {
+    public void getMainList(String channelId, Handler mHandler) {
         this.mHandler = mHandler;
         getUrl =
                 "https://api.douban.com/v2/fm/playlist?alt=json&apikey=02646d3fb69a52ff072d47bf23cef8fd&app_name=radio_iphone&channel="+
@@ -153,40 +155,31 @@ public class GetMusicList {
                     //Json的解析类对象
                     JSONObject json;
                     json = JSONObject.parseObject(jsonStr);
-                    Log.d("11111", "11112" + json);
+//                    Log.d("11111", "11112" + json);
                                         JSONArray array = JSONArray.parseArray(json.get("song").toString());
 
                     Log.d("11111", "11113" + array.get(0));
                     json =JSONObject.parseObject( array.get(0).toString());
-                    Log.d("11111", "11114" + json.get("singers"));
+//                    Log.d("11111", "11114" + json.get("singers"));
+//                    Log.d("11111", "11114" + json.get("url"));
                     array = JSONArray.parseArray(json.get("singers").toString());
 
-                    json =JSONObject.parseObject(array.get(0).toString());
-                    Log.d("11111", "11115" + json.get("name"));
-//                    JSONArray array = JSONArray.parseArray(json.get("chls").toString());
-//                    ArrayList<MainPager> mainList = new ArrayList<MainPager>();
-//
-//                    for (Object singJson : array
-//                            ) {
-//                        json = JSONObject.parseObject(singJson.toString());
-//                        String name = json.getString("name");
-//                        String intro = json.getString("intro");
-//                        String cover = json.getString("cover");
-//                        Bitmap bmp = getURLimage(cover);
-//                        Log.d("11111", "11111" + name + intro + bmp);
-//
-//                        MainPager page = new MainPager(name, intro, bmp);
-//                        mainList.add(page);
-//                    }
+                    JSONObject singers =JSONObject.parseObject(array.get(0).toString());
+//                    Log.d("11111", "11115" + singers.get("name"));
+                    Bitmap bmp = getURLimage(json.get("picture").toString());
                     Message message = new Message();
+                    Looper.prepare();
                     Bundle bundle = new Bundle();
-                    bundle.putParcelableArrayList("json", (ArrayList<? extends Parcelable>) mainList);
-//                    bundle.putString("intro", intro);
-//                    bundle.putParcelable("bmp", bmp);
+                    bundle.putString("url", (String) json.get("url"));
+                    bundle.putString("title", (String) json.get("title"));
+                    bundle.putString("name", singers.get("name").toString());
+                    bundle.putParcelable("bmp", bmp);
                     message.setData(bundle);//bundle传值，耗时，效率低
                     mHandler.sendMessage(message);//发送message信息
                     message.what = 1;//标志是哪个线程传数据
-
+                    Message message1 = new Message();
+                    message1.setData(bundle);
+                    MainActivity.handler.sendMessage(message1);
 
                     //message有四个传值方法，
                     //两个传int整型数据的方法message.arg1，message.arg2

@@ -7,14 +7,23 @@ import android.os.Parcelable;
 /**
  * Created by gaih on 2016/8/4.
  */
-public class MainPager   implements Parcelable{
+public class MainPager implements Parcelable {
     private String name;
     private String intro;
     private Bitmap cover;
+    private String id;
 
 
-    public MainPager(){
+    public MainPager() {
 
+    }
+
+
+    public MainPager(String id, String name, String intro, Bitmap cover) {
+        this.name = name;
+        this.intro = intro;
+        this.cover = cover;
+        this.id = id;
     }
 
     public String getName() {
@@ -29,11 +38,8 @@ public class MainPager   implements Parcelable{
         return cover;
     }
 
-    public MainPager(String name, String intro, Bitmap cover) {
-        this.name = name;
-        this.intro = intro;
-        this.cover = cover;
-
+    public String getId() {
+        return id;
     }
 
     public void setName(String name) {
@@ -48,6 +54,10 @@ public class MainPager   implements Parcelable{
         this.cover = cover;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -57,12 +67,13 @@ public class MainPager   implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(intro);
+        dest.writeString(id);
         cover.writeToParcel(dest, 0);
 
 
     }
 
-    public static final Parcelable.Creator<MainPager> CREATOR = new Creator<MainPager>(){
+    public static final Parcelable.Creator<MainPager> CREATOR = new Creator<MainPager>() {
 
         @Override
         public MainPager createFromParcel(Parcel source) {
@@ -71,6 +82,7 @@ public class MainPager   implements Parcelable{
             MainPager p = new MainPager();
             p.setName(source.readString());
             p.setIntro(source.readString());
+            p.setId(source.readString());
 
             p.cover = Bitmap.CREATOR.createFromParcel(source);
 

@@ -9,31 +9,48 @@
     tools:showIn="@layout/toolbar_view">
     <android.support.design.widget.TabLayout
         android:id="@+id/mTabLayout"
-        android:background="@color/deepGray"
+        android:background="@color/white"
         app:tabTextColor="@color/gray"
-        app:tabSelectedTextColor="@color/white"
+        app:tabSelectedTextColor="@android:color/black"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabMode="fixed" />
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v4.view.ViewPager
-            android:background="@color/deepGray"
-            android:id="@+id/mViewPager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_above="@+id/linearLayout3"
+            android:orientation="vertical" >
 
-        </android.support.v4.view.ViewPager>
+            <android.support.v4.view.ViewPager
+                android:background="@color/white"
+                android:id="@+id/mViewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
+            </android.support.v4.view.ViewPager>
 
-        <include
-            layout="@layout/bottom_play_bar"
-            android:layout_width="match_parent"
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="fill_parent"
             android:layout_height="57dp"
-            android:layout_gravity="bottom" />
-    </FrameLayout>
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true"
+            >
 
+            <include
+                layout="@layout/bottom_play_bar"
+                android:layout_width="match_parent"
+                android:layout_height="57dp"
+                android:layout_gravity="bottom" />
+
+        </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>

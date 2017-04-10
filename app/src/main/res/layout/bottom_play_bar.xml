@@ -3,7 +3,7 @@
     android:id="@+id/mFrameLayout"
     android:layout_width="match_parent"
     android:layout_height="57dp"
-    android:background="@color/deepGray">
+    android:background="@color/white">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#ffffff"
+                android:textColor="@color/deepGray"
                 android:text="无音乐"
                 android:textSize="16sp" />
 
@@ -44,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:textColor="@color/gray"
+                android:textColor="@color/deepGray"
                 android:textSize="12sp" />
         </LinearLayout>
 

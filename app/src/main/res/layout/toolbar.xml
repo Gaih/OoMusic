@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:elevation="4dp"
-        android:background="@color/deepGray"
+        android:background="@color/white"
         app:popupTheme="@style/AppTheme.PopupOverlay">
 
         <TextView
@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textColor="@color/white"
+            android:textColor="@color/deepGray"
             android:text="Music"
             android:textSize="21sp" />
     </android.support.v7.widget.Toolbar>

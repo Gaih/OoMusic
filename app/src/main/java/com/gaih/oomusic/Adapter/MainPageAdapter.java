@@ -45,7 +45,7 @@ public class MainPageAdapter extends RecyclerView.Adapter<MainPageAdapter.ViewHo
         holder.name.setText(mData.get(position).getName());
         holder.singer.setText(mData.get(position).getIntro());
         holder.mImageView.setImageBitmap(mData.get(position).getCover());
-
+        holder.itemId.setText(mData.get(position).getId());
         Log.d("1111","1111"+mData.get(position).getCover());
     }
 
@@ -65,6 +65,7 @@ public class MainPageAdapter extends RecyclerView.Adapter<MainPageAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private TextView name;
         private TextView singer;
+        private TextView itemId;
         private ImageView mImageView;
         private CardView mCardView;
 
@@ -73,6 +74,7 @@ public class MainPageAdapter extends RecyclerView.Adapter<MainPageAdapter.ViewHo
             mCardView = (CardView) itemView.findViewById(R.id.cardView);
             name = (TextView) itemView.findViewById(R.id.name);
             singer = (TextView)itemView.findViewById(R.id.singer);
+            itemId = (TextView) itemView.findViewById(R.id.itemId);
             mImageView = (ImageView) itemView.findViewById(R.id.iv);
             mCardView.setOnClickListener(this);
         }

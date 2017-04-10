@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,9 +17,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -68,8 +71,8 @@ public class FragmentFM extends Fragment {
     private void initView() {
         Intent intent = new Intent(this.getContext(), MusicService.class);
         getActivity().startService(intent);
-        myconn = new Myconn();
-        getActivity().bindService(intent, myconn, BIND_AUTO_CREATE);
+//        myconn = new Myconn();
+//        getActivity().bindService(intent, myconn, BIND_AUTO_CREATE);
 
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
@@ -79,9 +82,9 @@ public class FragmentFM extends Fragment {
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mainAdapter = new MainPageAdapter(musicList);
         mRecyclerView.setAdapter(mainAdapter);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(
-                this.getContext(), DividerItemDecoration.VERTICAL_LIST
-        ));
+//        mRecyclerView.addItemDecoration(new DividerItemDecoration(
+//                this.getContext(), DividerItemDecoration.VERTICAL_LIST
+//        ));
         mainAdapter.setOnItemClickListener(new MainPageAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(final View view, int position) {
@@ -102,8 +105,10 @@ public class FragmentFM extends Fragment {
                                 }
                             }).start();
                 }
+                TextView tx = (TextView) view.findViewById(R.id.itemId);
+                String  id = tx.getText().toString();
                 GetMusicList music = new GetMusicList();
-                music.getMainList(position+1, mHandler);            }
+                music.getMainList(id, mHandler);            }
         });
 
     }
@@ -136,6 +141,10 @@ public class FragmentFM extends Fragment {
 
                     break;
                 case 1:
+                    String url = msg.getData().getString("url");
+                    String name = msg.getData().getString("name");
+                    Bitmap pic = msg.getData().getParcelable("bmp");
+                    Log.d("11111", "case1:" + url+name+pic);
 
                     break;
                 case 2:

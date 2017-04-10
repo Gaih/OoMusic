@@ -155,31 +155,40 @@ public class GetFmList {
                     Log.d("11111", "11112" + json);
                     JSONArray jsonArray = JSONArray.parseArray(json.getString("groups"));
                     Log.d("11111", "11113" + jsonArray);
-                    json = (JSONObject) jsonArray.get(3);
-                    Log.d("11111", "11111" + json.get("chls"));
-                    JSONArray array = JSONArray.parseArray(json.get("chls").toString());
-                    ArrayList<MainPager> mainList = new ArrayList<MainPager>();
+                    for (Object jsonItems :
+                            jsonArray) {
+                        json = (JSONObject) jsonItems;
+                        Log.d("11111", "11111" + json.get("chls"));
+                        JSONArray array = JSONArray.parseArray(json.get("chls").toString());
+                        String group_name = json.get("group_name").toString();
+                        if (group_name != "品牌兆赫") {
+                            ArrayList<MainPager> mainList = new ArrayList<MainPager>();
 
-                    for (Object singJson : array
-                            ) {
-                        json = JSONObject.parseObject(singJson.toString());
-                        String name = json.getString("name");
-                        String intro = json.getString("intro");
-                        String cover = json.getString("cover");
-                        Bitmap bmp = getURLimage(cover);
-                        Log.d("11111", "11111" + name + intro + bmp);
-
-                        MainPager page = new MainPager(name, intro, bmp);
-                        mainList.add(page);
-                    }
-                    Message message=new Message();
-                    Bundle bundle=new Bundle();
-                    bundle.putParcelableArrayList("json", (ArrayList<? extends Parcelable>) mainList);
+                            for (Object singJson : array
+                                    ) {
+                                json = JSONObject.parseObject(singJson.toString());
+                                String name = json.getString("name");
+                                String intro = json.getString("intro");
+                                String cover = json.getString("cover");
+                                String id = json.getString("id");
+                                Bitmap bmp = getURLimage(cover);
+                                Log.d("11111", "22222" + name + intro + bmp);
+                                MainPager page = new MainPager(id,name, intro, bmp);
+                                mainList.add(page);
+                            }
+                            Message message = new Message();
+                            Bundle bundle = new Bundle();
+                            bundle.putParcelableArrayList("json", (ArrayList<? extends Parcelable>) mainList);
 //                    bundle.putString("intro", intro);
 //                    bundle.putParcelable("bmp", bmp);
-                    message.setData(bundle);//bundle传值，耗时，效率低
-                    mHandler.sendMessage(message);//发送message信息
-                    message.what=0;//标志是哪个线程传数据
+                            message.setData(bundle);//bundle传值，耗时，效率低
+                            mHandler.sendMessage(message);//发送message信息
+                            message.what = 0;//标志是哪个线程传数据
+                        }
+
+                    }
+
+
 
 
                     //message有四个传值方法，
@@ -191,8 +200,9 @@ public class GetFmList {
             });
         }
     };
+
     //根据url获取bitmap图像
-    public Bitmap getURLimage(String  cover) {
+    public Bitmap getURLimage(String cover) {
         Bitmap bmp = null;
         try {
             URL myurl = new URL(cover);

@@ -12,6 +12,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -41,6 +43,7 @@ import android.widget.Toast;
 import com.gaih.oomusic.Adapter.FragmentAdapter;
 import com.gaih.oomusic.Adapter.Music;
 import com.gaih.oomusic.Adapter.MusicAdapter;
+import com.gaih.oomusic.DoubanFM.GetMusicList;
 import com.gaih.oomusic.Fragment.Fragment01;
 import com.gaih.oomusic.Fragment.Fragment02;
 import com.gaih.oomusic.Fragment.Fragment03;
@@ -49,6 +52,7 @@ import com.gaih.oomusic.Service.MusicService;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import permissions.dispatcher.NeedsPermission;
@@ -86,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static TextView side_singer;
     private MusicAdapter musicAdapter;
     public static Context mContext;
+    private static MediaPlayer player;
 
 
     @Override
@@ -166,27 +171,49 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            Bundle bundle = msg.getData();
-            mPosition = bundle.getInt("mPosition");
-            duration = bundle.getInt("duration");
-            currentPosition = bundle.getInt("currentPosition");
-            musicList = bundle.getParcelableArrayList("newList");
-            isPlaying = bundle.getBoolean("isPlaying");
+//            Bundle bundle = msg.getData();
+//            mPosition = bundle.getInt("mPosition");
+//            duration = bundle.getInt("duration");
+//            currentPosition = bundle.getInt("currentPosition");
+//            musicList = bundle.getParcelableArrayList("newList");
+//            isPlaying = bundle.getBoolean("isPlaying");
+//
+//            mProgressbar.setMax(duration);
+//            mProgressbar.setProgress(currentPosition);
+//            tSinger.setText(musicList.get(mPosition).getSinger());
+//            tSong.setText(musicList.get(mPosition).getName());
+//            mAlbum.setImageBitmap(musicList.get(mPosition).getBitmap());
+//
+//            sideImg.setImageBitmap(musicList.get(mPosition).getBitmap());
+//            side_singer.setText(musicList.get(mPosition).getSinger());
+//            side_name.setText(musicList.get(mPosition).getName());
+//
+//            if (isPlaying) {
+//                mPlay.setImageResource(R.drawable.ic_play_bar_btn_pause);
+//            } else if (!isPlaying) {
+//                mPlay.setImageResource(R.drawable.ic_play_bar_btn_play);
+//            }
+            //以上 本地播放代码
+            //以下 豆瓣FM播放
+            sideImg.setImageBitmap((Bitmap) msg.getData().getParcelable("bmp"));
+            side_singer.setText(msg.getData().getString("title"));
+            side_name.setText(msg.getData().getString("name"));
 
-            mProgressbar.setMax(duration);
-            mProgressbar.setProgress(currentPosition);
-            tSinger.setText(musicList.get(mPosition).getSinger());
-            tSong.setText(musicList.get(mPosition).getName());
-            mAlbum.setImageBitmap(musicList.get(mPosition).getBitmap());
-
-            sideImg.setImageBitmap(musicList.get(mPosition).getBitmap());
-            side_singer.setText(musicList.get(mPosition).getSinger());
-            side_name.setText(musicList.get(mPosition).getName());
-
-            if (isPlaying) {
-                mPlay.setImageResource(R.drawable.ic_play_bar_btn_pause);
-            } else if (!isPlaying) {
-                mPlay.setImageResource(R.drawable.ic_play_bar_btn_play);
+            tSinger.setText(msg.getData().getString("name"));
+            tSong.setText(msg.getData().getString("title"));
+            mAlbum.setImageBitmap((Bitmap) msg.getData().getParcelable("bmp"));
+            String url = msg.getData().getString("url");
+            if (player!=null){
+                player.reset();
+            }else {
+                player = new MediaPlayer();
+            }
+            try {
+                player.setDataSource(url);
+                player.prepare();
+                player.start();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     };
