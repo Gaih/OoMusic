@@ -15,6 +15,7 @@ import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -27,6 +28,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -199,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             side_singer.setText(msg.getData().getString("title"));
             side_name.setText(msg.getData().getString("name"));
 
+
             tSinger.setText(msg.getData().getString("name"));
             tSong.setText(msg.getData().getString("title"));
             mAlbum.setImageBitmap((Bitmap) msg.getData().getParcelable("bmp"));
@@ -210,8 +213,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             try {
                 player.setDataSource(url);
-                player.prepare();
-                player.start();
+                player.prepareAsync();
+                player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mediaPlayer) {
+//                        CountDownTimer cdt = new CountDownTimer(player.getDuration()/1000+1, 1) {
+//                            @Override
+//                            public void onTick(long millisUntilFinished) {
+//                                Log.d("歌曲长度:"+player.getDuration(),"当前进度："+player.getCurrentPosition()) ;
+//                                mProgressbar.setMax(player.getDuration());
+//                                mProgressbar.setProgress(player.getCurrentPosition());
+//                            }
+//                            @Override
+//                            public void onFinish() {
+//                                Toast.makeText(mContext,"播放完毕",Toast.LENGTH_SHORT).show();
+//                            }
+//                        };
+                        player.start();
+//                        cdt.start();
+                    }
+                });
+
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
