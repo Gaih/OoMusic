@@ -31,7 +31,7 @@ import permissions.dispatcher.RuntimePermissions;
 
 public class WelcomeActivity extends AppCompatActivity {
 
-    @NeedsPermission(value = Manifest.permission.WRITE_EXTERNAL_STORAGE,maxSdkVersion = 24)
+    @NeedsPermission(value = Manifest.permission.WRITE_EXTERNAL_STORAGE,maxSdkVersion = 25)
     void showToast() {
         final Intent it = new Intent(this, MainActivity.class); //你要转向的Activity
         Timer timer = new Timer();
